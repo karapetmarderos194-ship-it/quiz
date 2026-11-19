@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html>
+<head>
+                <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Armenian:wght@400;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 24px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', 'Noto Sans Armenian', sans-serif;
+  color: #fff;
+  background-color: #24313b;
+  background-image:
+    linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.28)),
+    url('https://i.postimg.cc/gjgYJqkm/images-(4).jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+button {
+  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#app {
+  width: 100%;
+  max-width: 560px;
+  margin: auto;
+}
+
+.quiz-card {
+  width: 100%;
+  padding: 28px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 24px;
+  background: rgba(0,0,0,.40);
+  color: #fff;
+  box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.brand {
+  margin-bottom: 22px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: #fff;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: #fff;
+  font-size: 13px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 7px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border-radius: 99px;
+  background: rgba(255,255,255,.2);
+}
+
+#progress {
+  width: 0;
+  height: 100%;
+  border-radius: 99px;
+  background: #39ff88;
+  transition: width .3s ease;
+}
+
+#start-screen,
+#quiz-screen,
+#result-screen {
+  width: 100%;
+}
+
+#start-screen,
+#result-screen {
+  text-align: center;
+}
+
+h1, h2, p, #question-number, #question,
+#feedback, footer, #final-score, #result-message {
+  color: #fff;
+}
+
+#start-screen h1,
+#result-screen h2 {
+  margin: 10px 0 14px;
+  font-size: clamp(26px, 6vw, 36px);
+}
+
+#start-screen p,
+#result-message {
+  line-height: 1.7;
+}
+
+#question-number {
+  margin-bottom: 12px;
+  font-size: 14px;
+  opacity: .9;
+}
+
+#question {
+  margin: 0 0 22px;
+  font-size: clamp(20px, 5vw, 27px);
+  line-height: 1.5;
+}
+
+#answers {
+  display: grid;
+  gap: 12px;
+}
+
+.answer-btn {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  border: 2px solid #24d975;
+  border-radius: 13px;
+  background: #159b53;
+  color: #fff;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .18s ease, background .18s ease;
+}
+
+.answer-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: #20bf68;
+}
+
+.answer-btn:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.answer-btn.correct {
+  background: #00ff66 !important;
+  border-color: #8bffb7 !important;
+  color: #00351a !important;
+}
+
+.answer-btn.wrong {
+  background: #f02745 !important;
+  border-color: #ff8293 !important;
+  color: #fff !important;
+}
+
+.main-btn {
+  display: block;
+  width: 100%;
+  min-height: 54px;
+  margin-top: 18px;
+  padding: 14px 20px;
+  border: 2px solid #fff;
+  border-radius: 14px;
+  background: #fff;
+  color: #111 !important;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 5px 20px rgba(0,0,0,.18);
+  transition: transform .2s ease, background .2s ease;
+}
+
+.main-btn:hover {
+  transform: translateY(-2px);
+  background: #e9e9e9;
+}
+
+.main-btn:active {
+  transform: scale(.98);
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 18px auto;
+}
+
+#timer-ring {
+  display: flex;
+  width: 66px;
+  height: 66px;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid #39ff88;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  box-shadow: 0 0 18px rgba(57,255,136,.18);
+  transition: border-color .2s ease;
+}
+
+#timer-ring.warning {
+  border-color: #ff4058;
+  animation: pulse .6s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+
+#feedback {
+  min-height: 26px;
+  margin-top: 16px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+footer {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 12px;
+  opacity: .8;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 14px 10px;
+    background-attachment: scroll;
+  }
+
+  .quiz-card {
+    padding: 22px 17px;
+    border-radius: 20px;
+  }
+
+  .brand {
+    font-size: 24px;
+  }
+
+  .answer-btn {
+    font-size: 15px;
+  }
+}</style>
+            </head>
+            <body>
+                <script>(function installLiveweaveConsoleBridge() {
+        if (window.__liveweaveConsoleBridge) return;
+        window.__liveweaveConsoleBridge = true;
+
+        function format(value) {
+            if (typeof value === 'string') return value;
+            if (typeof value === 'undefined') return 'undefined';
+            if (typeof value === 'function') return value.toString();
+            if (value instanceof Error) return value.name + ': ' + value.message;
+            if (value instanceof Element) return value.outerHTML;
+            try {
+                var seen = [];
+                return JSON.stringify(value, function(key, item) {
+                    if (typeof item === 'object' && item !== null) {
+                        if (seen.indexOf(item) !== -1) return '[Circular]';
+                        seen.push(item);
+                    }
+                    return item;
+                }, 2);
+            } catch (err) {
+                return String(value);
+            }
+        }
+
+        function send(type, values, id) {
+            parent.postMessage({
+                source: 'liveweave-preview-console',
+                type: type,
+                id: id || '',
+                values: (values || []).map(format)
+            }, '*');
+        }
+
+        ['log', 'info', 'warn', 'error', 'debug'].forEach(function(level) {
+            var original = console[level];
+            console[level] = function() {
+                var args = Array.prototype.slice.call(arguments);
+                send(level === 'log' || level === 'debug' ? 'log' : level, args);
+                if (original) original.apply(console, args);
+            };
+        });
+
+        window.addEventListener('error', function(event) {
+            send('error', [event.message + (event.lineno ? ' (line ' + event.lineno + ')' : '')]);
+        });
+        window.addEventListener('unhandledrejection', function(event) {
+            send('error', ['Unhandled promise rejection:', event.reason]);
+        });
+        window.addEventListener('message', function(event) {
+            var message = event.data || {};
+            if (event.source !== parent || message.source !== 'liveweave-parent-console' || message.type !== 'evaluate') return;
+            try {
+                var result = (0, eval)(message.code);
+                Promise.resolve(result).then(function(value) {
+                    send('result', [value], message.id);
+                }, function(error) {
+                    send('error', [error], message.id);
+                });
+            } catch (error) {
+                send('error', [error], message.id);
+            }
+        });
+        send('ready', []);
+    })();</script>
+                <script>(function installPreviewLinkGuard() {
+        var noticeTimer;
+
+        function showNotice(message) {
+            var notice = document.getElementById('lw-preview-link-notice');
+            if (!notice) {
+                notice = document.createElement('div');
+                notice.id = 'lw-preview-link-notice';
+                notice.setAttribute('role', 'status');
+                notice.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:2147483647;max-width:calc(100% - 24px);padding:10px 14px;border-radius:9px;background:#17212d;color:#fff;font:13px/1.4 system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none;';
+                document.body.appendChild(notice);
+            }
+            notice.textContent = message;
+            notice.hidden = false;
+            clearTimeout(noticeTimer);
+            noticeTimer = setTimeout(function() { notice.hidden = true; }, 3500);
+        }
+
+        document.addEventListener('click', function(event) {
+            var link = event.target.closest && event.target.closest('a[href]');
+            if (!link || event.defaultPrevented) return;
+
+            var href = (link.getAttribute('href') || '').trim();
+            if (href.charAt(0) === '#') {
+                event.preventDefault();
+                var fragment = href.slice(1);
+                if (!fragment) {
+                    window.scrollTo(0, 0);
+                    return;
+                }
+                try { fragment = decodeURIComponent(fragment); } catch (error) {}
+                var target = document.getElementById(fragment) || document.getElementsByName(fragment)[0];
+                if (target) target.scrollIntoView();
+                return;
+            }
+
+            if (/^(https?:)?\/\//i.test(href)) {
+                event.preventDefault();
+                window.open(href, '_blank', 'noopener,noreferrer');
+                return;
+            }
+
+            if (/^(mailto:|tel:)/i.test(href)) return;
+
+            event.preventDefault();
+            showNotice('This page cannot be opened in the preview.');
+        }, true);
+    })();</script>
+                <div id="app">
+  <main class="quiz-card">
+    <div class="brand"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ТЕСТ 6</font></font></div>
+
+    <div class="progress-info">
+      <span id="counter"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Պատրաստ ե՞ս սկսել</font></font></span>
+      <span id="score-text"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Միավորներ՝ 0</font></font></span>
+    </div>
+
+    <div class="progress-track">
+      <div id="progress"></div>
+    </div>
+
+    <section id="start-screen">
+      <h1><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Ստուգի՛ր գիտելիքներդ</font></font></h1>
+      <p><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">6 дней · 20 дней</font></font></p>
+      <p><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Ընտրի՛ր A, B, C կամ D պատասխանը։</font></font></p>
+      <button id="start-btn" class="main-btn" type="button"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">
+        Սկսել
+      </font></font></button>
+    </section>
+
+    <section id="quiz-screen" hidden="">
+      <div id="question-number"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Հարց 1 / 6</font></font></div>
+      <h2 id="question"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Հարցը կհայտնվի այստեղ</font></font></h2>
+
+      <div class="timer">
+        <div id="timer-ring">
+          <span id="timer-text"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">6</font></font></span>
+        </div>
+      </div>
+
+      <div id="answers">
+        <button class="answer-btn" type="button" data-answer="A"></button>
+        <button class="answer-btn" type="button" data-answer="B"></button>
+        <button class="answer-btn" type="button" data-answer="C"></button>
+        <button class="answer-btn" type="button" data-answer="D"></button>
+      </div>
+
+      <p id="feedback" aria-live="polite"></p>
+
+      <button id="next-btn" class="main-btn" type="button" hidden=""><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">
+        Հաջորդ հարցը
+      </font></font></button>
+    </section>
+
+    <section id="result-screen" hidden="">
+      <h2><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Թեստն ավարտվեց 🎉</font></font></h2>
+      <p id="final-score"></p>
+      <p id="result-message"></p>
+      <button id="restart-btn" class="main-btn" type="button"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">
+        Կրկնել թեստը
+      </font></font></button>
+    </section>
+
+    <footer><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">ТЕСТ 6</font></font></footer>
+  </main>
+</div>
+                <script>const questions = [
+  {
+    question: "Մարդու գլխուղեղի մեծ կիսագնդերի կեղևում լսողական գոտին գտնվում է.",
+    answers: {
+      A: "ճակատային բլոգում",
+      B: "ծոծրակային բլոգում",
+      C: "քունքային բլոգում",
+      D: "գագաթնային բլոգում"
+    },
+    correct: "C"
+  },
+  {
+    question: "Մարդու ձայնն այնքան բարձր է, որքան.",
+    answers: {
+      A: "կարճ են ձայնալարերը",
+      B: "երկար են ձայնալարերը",
+      C: "փոքր է ձայնալարերի տատանումների հաճախությունը",
+      D: "ձայնի բարձրությունը կախված չէ ձայնալարերի երկարությունից"
+    },
+    correct: "A"
+  },
+  {
+    question: "Ներքին ականջի կազմության մեջ մտնում են.",
+    answers: {
+      A: "լսողական ոսկրիկները",
+      B: "խխունջը",
+      C: "կիսաբոլոր խողովակները",
+      D: "ճիշտ են բ և գ պատասխանները"
+    },
+    correct: "D"
+  },
+  {
+    question: "Լսողական ընկալիչները գտնվում են.",
+    answers: {
+      A: "խխունջում",
+      B: "ձվաձև պատուհանի վրա",
+      C: "կիսաբոլոր խողովակներում",
+      D: "լսողական ոսկրիկները վրա"
+    },
+    correct: "A"
+  },
+  {
+    question: "Մարդու միջին ականջի լսողական ոսկրիկները.",
+    answers: {
+      A: "ուժեղացնում են թմբկաթաղանթի տատանումները",
+      B: "հաղորդում են թմբկաթաղանթի տատանումները ներքին ականջի ձվաձև պատուհանին",
+      C: "հաղորդում են թմբկաթաղանթի տատանումները լսողական ընկալիչներին",
+      D: "ճիշտ են ա և բ պատասխանները"
+    },
+    correct: "D"
+  },
+  {
+    question: "Ինչ հաջորդականությամբ են ձայնային ալիքները հաղորդվում մեծ կիսագնդերի կեղևի լսողական գոտուն (1. թմբկաթաղանթ, 2. ձվաձև պատուհանի թաղանթ, 3. միջին ականջի ոսկրիկներ, 4. լսողական արտաքին անցուղի, 5. մեծ կիսագնդերի կեղևի քունքային բաժին)?",
+    answers: {
+      A: "1, 2, 4, 3, 5",
+      B: "2, 4, 3, 5, 1",
+      C: "4, 1, 3, 2, 5",
+      D: "4, 2, 3, 1, 5"
+    },
+    correct: "C"
+  }
+];
+
+const startScreen = document.getElementById("start-screen");
+const quizScreen = document.getElementById("quiz-screen");
+const resultScreen = document.getElementById("result-screen");
+
+const startBtn = document.getElementById("start-btn");
+const nextBtn = document.getElementById("next-btn");
+const restartBtn = document.getElementById("restart-btn");
+
+const counter = document.getElementById("counter");
+const scoreText = document.getElementById("score-text");
+const progress = document.getElementById("progress");
+const questionNumber = document.getElementById("question-number");
+const questionText = document.getElementById("question");
+const answerButtons = [...document.querySelectorAll(".answer-btn")];
+const timerText = document.getElementById("timer-text");
+const timerRing = document.getElementById("timer-ring");
+const feedback = document.getElementById("feedback");
+const finalScore = document.getElementById("final-score");
+const resultMessage = document.getElementById("result-message");
+
+let currentQuestion = 0;
+let score = 0;
+let timerId = null;
+let answered = false;
+let audioContext = null;
+let wrongAnswersList = []; // 🔄 Զանգված՝ սխալ պատասխանները պահելու համար
+
+function playBeep(frequency = 700, duration = 0.12, volume = 0.07) {
+  try {
+    audioContext ??= new (
+      window.AudioContext || window.webkitAudioContext
+    )();
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value = frequency;
+    gain.gain.value = volume;
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + duration);
+  } catch (error) {
+    console.warn("Ձայնը հնարավոր չեղավ միացնել։", error);
+  }
+}
+
+function startQuiz() {
+  clearInterval(timerId);
+
+  currentQuestion = 0;
+  score = 0;
+  wrongAnswersList = []; // 🔄 Մաքրում ենք նախորդ խաղի սխալները
+
+  // Հեռացնում ենք հին սխալների բլոկը, եթե այն արդեն գոյություն ունի
+  const oldReview = document.getElementById("wrong-answers-review");
+  if (oldReview) oldReview.remove();
+
+  scoreText.textContent = "Միավորներ՝ 0";
+  startScreen.hidden = true;
+  resultScreen.hidden = true;
+  quizScreen.hidden = false;
+
+  showQuestion();
+}
+
+function showQuestion() {
+  clearInterval(timerId);
+
+  answered = false;
+
+  const item = questions[currentQuestion];
+
+  counter.textContent =
+    `Հարց ${currentQuestion + 1} / ${questions.length}`;
+
+  questionNumber.textContent =
+    `ՀԱՐՑ ${currentQuestion + 1} / ${questions.length}`;
+
+  questionText.textContent = item.question;
+  timerText.textContent = "20";
+  timerRing.classList.remove("warning");
+
+  progress.style.width =
+    `${(currentQuestion / questions.length) * 100}%`;
+
+  feedback.textContent = "";
+  nextBtn.hidden = true;
+
+  answerButtons.forEach(button => {
+    const letter = button.dataset.answer;
+
+    button.textContent = `${letter}. ${item.answers[letter]}`;
+    button.disabled = false;
+    button.classList.remove("correct", "wrong");
+  });
+
+  playBeep(700, 0.12, 0.07);
+
+  const startTime = Date.now();
+  let lastSecond = 20;
+
+  timerId = setInterval(() => {
+    if (answered) {
+      clearInterval(timerId);
+      return;
+    }
+
+    const elapsed = Date.now() - startTime;
+    const remaining = Math.max(0, 20 - Math.floor(elapsed / 1000));
+
+    if (remaining !== lastSecond) {
+      lastSecond = remaining;
+      timerText.textContent = remaining;
+
+      if (remaining > 0) {
+        if (remaining <= 5) {
+          timerRing.classList.add("warning");
+        }
+
+        if (remaining === 1) {
+          playBeep(1000, 0.65, 0.16);
+        } else {
+          playBeep(700, 0.12, 0.07);
+        }
+      }
+    }
+
+    if (elapsed >= 20000) {
+      clearInterval(timerId);
+      timerText.textContent = "0";
+      revealAnswer(null);
+    }
+  }, 50);
+}
+
+function chooseAnswer(event) {
+  if (answered) return;
+
+  revealAnswer(event.currentTarget.dataset.answer);
+}
+
+function revealAnswer(selected) {
+  if (answered) return;
+
+  answered = true;
+  clearInterval(timerId);
+
+  const item = questions[currentQuestion];
+
+  answerButtons.forEach(button => {
+    button.disabled = true;
+
+    if (button.dataset.answer === item.correct) {
+      button.classList.add("correct");
+    } else if (button.dataset.answer === selected) {
+      button.classList.add("wrong");
+    }
+  });
+
+  if (selected === item.correct) {
+    score++;
+    scoreText.textContent = `Միավորներ՝ ${score}`;
+    feedback.textContent = "Ճիշտ է՛։ Ապրե՛ս։ 🎉";
+    playBeep(900, 0.2, 0.1);
+  } else {
+    // 🔄 Եթե սխալ է կամ ժամանակը սպառվել է, ավելացնում ենք սխալների ցուցակում
+    wrongAnswersList.push({
+      question: item.question,
+      userAnswer: selected ? `${selected}. ${item.answers[selected]}` : "Ժամանակը սպառվեց",
+      correctAnswer: `${item.correct}. ${item.answers[item.correct]}`
+    });
+
+    if (selected === null) {
+      feedback.textContent =
+        `Ժամանակը վերջացավ։ Ճիշտ պատասխանն է՝ ${item.correct}. ${item.answers[item.correct]}`;
+    } else {
+      feedback.textContent =
+        `Սխալ պատասխան։ Ճիշտն է՝ ${item.correct}. ${item.answers[item.correct]}`;
+    }
+  }
+
+  progress.style.width =
+    `${((currentQuestion + 1) / questions.length) * 100}%`;
+
+  nextBtn.textContent =
+    currentQuestion === questions.length - 1
+      ? "Տեսնել արդյունքը"
+      : "Հաջորդ հարցը";
+
+  nextBtn.hidden = false;
+}
+
+function nextQuestion() {
+  if (!answered) return;
+
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+    showQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  clearInterval(timerId);
+
+  quizScreen.hidden = true;
+  resultScreen.hidden = false;
+
+  finalScore.textContent =
+    `Քո արդյունքը՝ ${score} / ${questions.length}`;
+
+  if (score === 6) {
+    resultMessage.textContent = "Կատարյալ արդյունք։ Վեցը՝ վեցից։ 🏆";
+  } else if (score >= 4) {
+    resultMessage.textContent = "Շատ լավ արդյունք։ Շարունակի՛ր։ 🌟";
+  } else if (score >= 2) {
+    resultMessage.textContent = "Լավ փորձ էր։ Կրկնի՛ր ու բարելավիր արդյունքդ։ 💚";
+  } else {
+    resultMessage.textContent = "Փորձի՛ր ևս մեկ անգամ։ Դու կկարողանաս։ 💪";
+  }
+
+  // 🔄 Սխալների վերլուծության բլոկի կառուցում
+  if (wrongAnswersList.length > 0) {
+    const reviewContainer = document.createElement("div");
+    reviewContainer.id = "wrong-answers-review";
+    reviewContainer.style.marginTop = "24px";
+    reviewContainer.style.textAlign = "left";
+    reviewContainer.style.background = "rgba(255, 255, 255, 0.1)";
+    reviewContainer.style.padding = "16px";
+    reviewContainer.style.borderRadius = "12px";
+    reviewContainer.style.maxHeight = "250px";
+    reviewContainer.style.overflowY = "auto";
+
+    const title = document.createElement("h3");
+    title.textContent = "Քո թույլ տված սխալները. 📋";
+    title.style.color = "#ff8293";
+    title.style.marginTop = "0";
+    title.style.fontSize = "18px";
+    reviewContainer.appendChild(title);
+
+    wrongAnswersList.forEach((fault, index) => {
+      const itemDiv = document.createElement("div");
+      itemDiv.style.marginBottom = "14px";
+      itemDiv.style.borderBottom = "1px solid rgba(255,255,255,0.15)";
+      itemDiv.style.paddingBottom = "8px";
+
+      itemDiv.innerHTML = `
+        <p style="margin: 4px 0; font-weight: bold; color: #fff;">${index + 1}. ${fault.question}</p>
+        <p style="margin: 2px 0 2px 12px; color: #ff8293; font-size: 14px;">❌ Քո պատասխանը՝ ${fault.userAnswer}</p>
+        <p style="margin: 2px 0 2px 12px; color: #39ff88; font-size: 14px;">✅ Ճիշտ պատասխանը՝ ${fault.correctAnswer}</p>
+      `;
+      reviewContainer.appendChild(itemDiv);
+    });
+
+    // Տեղադրում ենք հաղորդագրության տեքստից առաջ (վերագործարկման կոճակից վերև)
+    restartBtn.parentNode.insertBefore(reviewContainer, restartBtn);
+  }
+
+  counter.textContent = "Թեստն ավարտված է";
+  progress.style.width = "100%";
+}
+
+startBtn.addEventListener("click", startQuiz);
+nextBtn.addEventListener("click", nextQuestion);
+restartBtn.addEventListener("click", startQuiz);
+
+answerButtons.forEach(button => {
+  button.addEventListener("click", chooseAnswer);
+});
+</script>
+            
+        
+    </body>
